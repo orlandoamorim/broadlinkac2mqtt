@@ -211,3 +211,15 @@ func mustInt64(v string) int64 {
 	}
 	return n
 }
+
+func TestControlBodyNumericTerminalID(t *testing.T) {
+	c := &Client{}
+	cookie := base64.StdEncoding.EncodeToString([]byte(`{"terminalid":123456789,"aeskey":"aes-key"}`))
+	body, err := c.controlBody(Device{Cookie: cookie, DevSession: "sess", EndpointID: "ep", ProductID: "pid", Mac: "mac"}, "get", []string{"pwr"}, nil)
+	if err != nil {
+		t.Fatalf("controlBody with numeric terminalid: %v", err)
+	}
+	if len(body) == 0 {
+		t.Fatal("empty body")
+	}
+}

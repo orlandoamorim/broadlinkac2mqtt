@@ -384,7 +384,10 @@ func (c *Client) controlBody(device Device, act string, params []string, vals []
 	}
 
 	var rawCookie struct {
-		TerminalID string `json:"terminalid"`
+		// Some accounts (e.g. white-label apps such as Elgin Air) return
+		// terminalid as a JSON number instead of a string. Keep the raw
+		// value so it is echoed back with its original type.
+		TerminalID any    `json:"terminalid"`
 		AESKey     string `json:"aeskey"`
 	}
 	if err = json.Unmarshal(rawCookieBytes, &rawCookie); err != nil {
